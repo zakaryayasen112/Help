@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amada AI</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('gDTw2kZmLsr_2erpI');</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #6B5CE7;
+    --primary-dark: #5648c4;
+    --dark: #1a1a2e;
+    --text: #2d2d3a;
+    --muted: #7a7a8c;
+    --bg: #f4f4f8;
+    --card: #ffffff;
+    --border: #e0e0eb;
+    --font: 'Noto Kufi Arabic', sans-serif;
+  }
+  body { font-family: var(--font); direction: rtl; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  .nav { background: white; border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .nav-logo .ai-badge { background: var(--primary); color: white; border-radius: 8px; padding: 3px 8px; font-size: 13px; font-weight: 700; }
+  .nav-btn { background: var(--dark); color: white; border: none; border-radius: 20px; padding: 8px 16px; font-family: var(--font); font-size: 13px; cursor: pointer; font-weight: 600; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* LANDING */
+  .landing { padding: 40px 20px; text-align: center; }
+  .badge-pill { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+  .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); }
+  .hero-title { font-size: 30px; font-weight: 700; line-height: 1.4; color: var(--dark); margin-bottom: 16px; }
+  .hero-title span { color: var(--primary); }
+  .hero-sub { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 32px; }
+  .btn-primary { display: block; width: 100%; background: var(--primary); color: white; border: none; border-radius: 14px; padding: 16px; font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+  .btn-secondary { display: block; width: 100%; background: var(--dark); color: white; border: none; border-radius: 14px; padding: 16px; font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer; }
+
+  /* FEATURES */
+  .features { padding: 40px 20px; }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--dark); text-align: center; margin-bottom: 6px; }
+  .section-sub { color: var(--muted); text-align: center; font-size: 13px; margin-bottom: 28px; }
+  .feature-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); }
+  .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 14px; }
+  .feature-card h3 { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* AUTH */
+  .auth-wrap { padding: 30px 20px; }
+  .auth-card { background: white; border-radius: 20px; padding: 30px 24px; border: 1px solid var(--border); }
+  .auth-icon { width: 56px; height: 56px; background: #f0eeff; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 16px; }
+  .auth-title { font-size: 26px; font-weight: 700; text-align: center; color: var(--dark); margin-bottom: 6px; }
+  .auth-sub { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 13px; font-weight: 600; color: var(--dark); display: flex; align-items: center; gap: 6px; justify-content: flex-end; margin-bottom: 8px; }
+  .form-input { width: 100%; background: #f8f8fc; border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-family: var(--font); font-size: 14px; color: var(--text); text-align: right; outline: none; }
+  .form-input:focus { border-color: var(--primary); background: white; }
+  .form-input::placeholder { color: #bbb; }
+  .auth-link { text-align: center; font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .auth-link a { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
+  .forgot { color: var(--primary); font-size: 13px; cursor: pointer; margin-bottom: 6px; display: block; text-align: right; }
+
+  /* OTP */
+  .otp-wrap { display: flex; gap: 10px; justify-content: center; margin: 20px 0; direction: ltr; }
+  .otp-input { width: 48px; height: 56px; text-align: center; font-size: 22px; font-weight: 700; border: 2px solid var(--border); border-radius: 12px; font-family: var(--font); color: var(--dark); background: #f8f8fc; outline: none; }
+  .otp-input:focus { border-color: var(--primary); background: white; }
+  .otp-timer { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .otp-resend { text-align: center; font-size: 13px; color: var(--primary); cursor: pointer; font-weight: 600; }
+
+  /* DASHBOARD */
+  .dash-nav { background: white; border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .user-info { display: flex; align-items: center; gap: 8px; }
+  .user-avatar { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; }
+  .user-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+  .user-badge { font-size: 10px; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .dash-actions { display: flex; gap: 8px; }
+  .dash-icon-btn { width: 34px; height: 34px; background: #f0eeff; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+  /* TABS */
+  .tabs { display: flex; background: white; border-bottom: 1px solid var(--border); padding: 0 12px; overflow-x: auto; gap: 4px; }
+  .tab { padding: 12px 14px; font-family: var(--font); font-size: 13px; font-weight: 600; color: var(--muted); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab.active { color: white; border-bottom-color: var(--dark); background: var(--dark); border-radius: 8px 8px 0 0; margin-bottom: -1px; }
+
+  /* CREATE */
+  .create-wrap { padding: 20px; }
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .type-btn { background: white; border: 2px solid var(--border); border-radius: 14px; padding: 16px 12px; font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text); }
+  .type-btn.selected { border-color: var(--primary); background: #f0eeff; color: var(--primary); }
+  .create-label { font-size: 13px; font-weight: 600; color: var(--text); text-align: right; margin-bottom: 8px; display: block; }
+  .create-input { width: 100%; background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; font-family: var(--font); font-size: 13px; color: var(--text); text-align: right; outline: none; margin-bottom: 14px; }
+  .create-input:focus { border-color: var(--primary); }
+  .upload-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 30px; text-align: center; margin-bottom: 20px; cursor: pointer; position: relative; }
+  .upload-zone:hover { border-color: var(--primary); background: #f8f7ff; }
+  .upload-icon { font-size: 32px; margin-bottom: 10px; }
+  .upload-text { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .upload-sub { font-size: 12px; color: var(--muted); }
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .theme-item { border: 2px solid var(--border); border-radius: 12px; padding: 12px; cursor: pointer; position: relative; }
+  .theme-item.selected { border-color: var(--primary); }
+  .theme-preview { height: 50px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .theme-line { height: 6px; border-radius: 3px; }
+  .theme-name { font-size: 12px; font-weight: 600; color: var(--text); text-align: center; }
+  .submit-btn { display: block; width: 100%; background: var(--primary); color: white; border: none; border-radius: 14px; padding: 18px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* LOADING OVERLAY */
+  .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 500; display: none; flex-direction: column; align-items: center; justify-content: center; }
+  .loading-overlay.show { display: flex; }
+  .loading-spinner { width: 56px; height: 56px; border: 4px solid #e0e0eb; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .loading-sub { font-size: 13px; color: var(--muted); }
+
+  /* OUTLINE */
+  .outline-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; }
+  .outline-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .outline-title { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .outline-badge { background: #f0eeff; color: var(--primary); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; }
+  .outline-item { display: flex; align-items: center; gap: 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+  .outline-item-text { flex: 1; font-size: 14px; font-weight: 600; color: var(--dark); text-align: right; }
+  .outline-del { width: 28px; height: 28px; background: #fff0f0; border: none; border-radius: 8px; cursor: pointer; color: #e74c3c; font-size: 14px; flex-shrink: 0; }
+  .outline-add { background: white; border: 2px dashed var(--border); border-radius: 10px; padding: 12px; width: 100%; font-family: var(--font); font-size: 13px; color: var(--primary); font-weight: 600; cursor: pointer; margin-bottom: 16px; }
+  .outline-add:hover { background: #f0eeff; }
+  .generate-btn { display: block; width: 100%; background: var(--dark); color: white; border: none; border-radius: 14px; padding: 18px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; }
+  .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* RESULT */
+  .result-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; }
+  .result-header { text-align: center; margin-bottom: 20px; }
+  .result-emoji { font-size: 36px; margin-bottom: 8px; }
+  .result-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .result-sub { font-size: 13px; color: var(--muted); }
+  .download-btn { display: block; width: 100%; background: var(--primary); color: white; border: none; border-radius: 14px; padding: 16px; font-family: var(--font); font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+  .slide-preview { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .slide-num { font-size: 11px; font-weight: 700; color: var(--primary); text-align: left; margin-bottom: 8px; }
+  .slide-title { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 10px; text-align: right; }
+  .slide-body { font-size: 13px; color: var(--text); line-height: 1.7; text-align: right; }
+
+  /* PROJECTS */
+  .projects-wrap { padding: 20px; }
+  .projects-title { font-size: 18px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .projects-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .project-card { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .project-card:hover { border-color: var(--primary); }
+  .project-info { flex: 1; text-align: right; }
+  .project-title-t { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .project-meta { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+  .project-type { background: #f0eeff; color: var(--primary); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+  .project-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 14px; flex-shrink: 0; }
+
+  /* PROFILE */
+  .profile-wrap { padding: 20px; }
+  .profile-hero { background: white; border-radius: 20px; border: 1px solid var(--border); padding: 24px; text-align: center; margin-bottom: 16px; }
+  .profile-avatar { width: 72px; height: 72px; background: var(--primary); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 28px; margin: 0 auto 14px; }
+  .profile-name { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+  .pro-badge { display: inline-flex; align-items: center; gap: 6px; background: #f0faf4; border: 1px solid #b8e8cc; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; color: #1d7c44; }
+  .pro-dot { width: 7px; height: 7px; background: #2ecc71; border-radius: 50%; }
+  .settings-card { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 20px; margin-bottom: 12px; }
+  .settings-label { font-size: 13px; font-weight: 600; color: var(--dark); text-align: right; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+  .settings-input { width: 100%; background: #f8f8fc; border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-family: var(--font); font-size: 14px; color: var(--text); text-align: right; outline: none; margin-bottom: 12px; }
+  .badge-tag { background: #f0eeff; color: var(--primary); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+
+  /* SCANNER */
+  .scanner-wrap { padding: 20px; }
+  .scanner-hero { background: white; border-radius: 20px; border: 1px solid var(--border); padding: 30px 20px; text-align: center; margin-bottom: 16px; }
+  .scanner-brain { width: 64px; height: 64px; background: #f0eeff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 16px; }
+  .scanner-title { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+  .scanner-sub { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+  .scanner-result { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 20px; margin-top: 16px; text-align: right; }
+  .scanner-result h3 { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+  .scanner-result p { font-size: 13px; color: var(--text); line-height: 1.8; margin-bottom: 10px; }
+  .scanner-chat { margin-top: 16px; }
+  .scanner-chat-input { width: 100%; background: white; border: 1px solid var(--border); border-radius: 12px; padding: 14px; font-family: var(--font); font-size: 13px; color: var(--text); text-align: right; outline: none; margin-bottom: 10px; }
+  .scanner-chat-input:focus { border-color: var(--primary); }
+  .chat-msg { padding: 12px 14px; border-radius: 12px; margin-bottom: 8px; font-size: 13px; line-height: 1.7; }
+  .chat-msg.user { background: var(--primary); color: white; text-align: right; margin-right: 20px; }
+  .chat-msg.ai { background: #f0eeff; color: var(--dark); text-align: right; margin-left: 20px; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 999; display: none; white-space: nowrap; }
+  .toast.show { display: block; animation: fadeInOut 2.5s forwards; }
+  @keyframes fadeInOut { 0%{opacity:0;transform:translateX(-50%) translateY(10px)} 15%{opacity:1;transform:translateX(-50%) translateY(0)} 80%{opacity:1} 100%{opacity:0} }
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loading-text">زیری دەستکرد خەریکی کارە...</div>
+  <div class="loading-sub" id="loading-sub">تکایە چەند جرکەیەک جاومەرێ بکە</div>
+</div>
+
+<div class="toast" id="toast">✓ کارەکە سەرکەوتوو بوو</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--               LANDING PAGE                 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page active" id="page-landing">
+  <div class="nav">
+    <button class="nav-btn" onclick="showPage('page-register')">دەستپێبکە</button>
+    <div class="nav-logo">Amada <span class="ai-badge">AI</span></div>
+  </div>
+  <div class="landing">
+    <div class="badge-pill"><span class="badge-dot"></span> نوێترین وەشانی زیری دەستکرد بەردەستە</div>
+    <h1 class="hero-title">ئامادەکردنی راپۆرت و سیمینار لە <span>چەند چرکەیەکدا</span></h1>
+    <p class="hero-sub">بە یارمەتی زیری دەستکرد، کات و هەوڵی خۆت بپارێزە. راپۆرتێکی ئەکادیمی ئامادە بکە بە یەک کلیک.</p>
+    <button class="btn-primary" onclick="showPage('page-register')">🚀 بەخۆڕایی تاقیبکەرەوە</button>
+    <button class="btn-secondary" onclick="showPage('page-login')">چوونەژوورەوە</button>
+  </div>
+  <div class="features">
+    <h2 class="section-title">چی پێشکەش دەکەین؟</h2>
+    <p class="section-sub">سێ تایبەتمەندی سەرەکی کە ژیانی زانکۆت ئاسان دەکەن.</p>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#e8f5e9">📊</div>
+      <h3>دروستکردنی سیمینار</h3>
+      <p>بەپێدانی تەنها ناونیشانێک، تەواوی سلایدەکان بە زانیاری دروست و سەرچاوەوە بۆت ئامادە دەکات و بە فۆرماتی PPTX دایدەگریت.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#f0eeff">📄</div>
+      <h3>نووسینی راپۆرت</h3>
+      <p>راپۆرتێکی ئەکادیمی ریکخراو لەگەڵ پەرەگراف، خاڵبەندی و سەرچاوەپێکراو. ڕاستەوخۆ دەیکەیت بە فایلێکی Word.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#fff8e1">🧠</div>
+      <h3>شیکارکەری فایل <span class="badge-tag">PRO</span></h3>
+      <p>مەلزەمە یان پەرتووکەکەت بەرزبکەرەوە، زیری دەستکرد دەیخوێنێتەوە و گرنگترین پرسیار و وەڵامەکانت بۆ دەردەهێنێت.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--                 REGISTER                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-register">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-landing')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">👋</div>
+      <h2 class="auth-title">دروستکردنی هەژمار</h2>
+      <p class="auth-sub">کۆدێک بۆ ئیمێلەکەت دەنێرین بۆ دڵنیاکردنەوە</p>
+      <div class="form-group">
+        <label class="form-label">👤 ناوی تەواو</label>
+        <input class="form-input" type="text" placeholder="ناوی سیانیت بنووسە" id="reg-name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">📧 ئیمەیڵ</label>
+        <input class="form-input" type="email" placeholder="ئیمەیڵی زانکۆ یان کەسی" id="reg-email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">🔑 وشەی نهێنی</label>
+        <input class="form-input" type="password" placeholder="وشەیەکی بەهێز بنووسە" id="reg-pass" />
+      </div>
+      <button class="btn-primary" id="reg-btn" onclick="doRegisterStep1()">📧 ناردنی کۆدی دڵنیاکردنەوە</button>
+      <p class="auth-link">پێشتر هەژمارت هەیە؟ <a onclick="showPage('page-login')">بچۆ ژوورەوە</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--             REGISTER OTP VERIFY            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-register-otp">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-register')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">📧</div>
+      <h2 class="auth-title">دڵنیاکردنەوەی ئیمێل</h2>
+      <p class="auth-sub" id="otp-reg-hint">کۆدی ٦ ژمارەیی بۆ ئیمێلەکەت نێردرا</p>
+      <div class="otp-wrap">
+        <input class="otp-input" maxlength="1" id="otp-r-1" oninput="otpNext(this,'otp-r-2')" onkeydown="otpBack(event,this,'')"/>
+        <input class="otp-input" maxlength="1" id="otp-r-2" oninput="otpNext(this,'otp-r-3')" onkeydown="otpBack(event,this,'otp-r-1')"/>
+        <input class="otp-input" maxlength="1" id="otp-r-3" oninput="otpNext(this,'otp-r-4')" onkeydown="otpBack(event,this,'otp-r-2')"/>
+        <input class="otp-input" maxlength="1" id="otp-r-4" oninput="otpNext(this,'otp-r-5')" onkeydown="otpBack(event,this,'otp-r-3')"/>
+        <input class="otp-input" maxlength="1" id="otp-r-5" oninput="otpNext(this,'otp-r-6')" onkeydown="otpBack(event,this,'otp-r-4')"/>
+        <input class="otp-input" maxlength="1" id="otp-r-6" oninput="otpNext(this,'')" onkeydown="otpBack(event,this,'otp-r-5')"/>
+      </div>
+      <div class="otp-timer" id="otp-reg-timer">⏱ ١٠ خولەک ماوەت هەیە</div>
+      <div class="otp-resend" onclick="doRegisterStep1(true)">دووبارە ناردن</div>
+      <br/>
+      <button class="btn-primary" onclick="doRegisterVerify()">✅ دڵنیاکردنەوە و دروستکردنی هەژمار</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--                   LOGIN                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-login">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-landing')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">👋</div>
+      <h2 class="auth-title">بەخێربێیتەوە</h2>
+      <p class="auth-sub">بۆ بەردەوامبوون تکایە بچۆ ژوورەوە</p>
+      <div class="form-group">
+        <label class="form-label">📧 ئیمەیڵ</label>
+        <input class="form-input" type="email" placeholder="نموونە: name@gmail.com" id="login-email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">🔒 وشەی نهێنی</label>
+        <input class="form-input" type="password" placeholder="········" id="login-pass" />
+        <a class="forgot" onclick="showPage('page-forgot')">وشەی نهێنیت لەبیرچووە؟</a>
+      </div>
+      <button class="btn-secondary" onclick="doLogin()">چوونەژوورەوە</button>
+      <p class="auth-link">هەژمارت نییە؟ <a onclick="showPage('page-register')">هەژمارێک دروست بکە</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--              FORGOT PASSWORD               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-forgot">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-login')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">🔑</div>
+      <h2 class="auth-title">گەڕاندنەوەی هەژمار</h2>
+      <p class="auth-sub">کۆدێکی دڵنیاییت بۆ دەنێرین بۆ گۆڕینی وشەی نهێنی</p>
+      <div class="form-group">
+        <label class="form-label">📧 ئیمەیڵ</label>
+        <input class="form-input" type="email" placeholder="ئیمەیڵەکەت بنووسە" id="forgot-email" />
+      </div>
+      <button class="btn-primary" onclick="doForgotStep1()">ناردنی کۆد</button>
+      <p class="auth-link">گەرانەوە بۆ <a onclick="showPage('page-login')">چوونەژوورەوە</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--             FORGOT OTP VERIFY              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-forgot-otp">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-forgot')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">📧</div>
+      <h2 class="auth-title">کۆدی دڵنیاکردنەوە</h2>
+      <p class="auth-sub" id="otp-forgot-hint">کۆدی ٦ ژمارەیی بۆ ئیمێلەکەت نێردرا</p>
+      <div class="otp-wrap">
+        <input class="otp-input" maxlength="1" id="otp-f-1" oninput="otpNext(this,'otp-f-2')" onkeydown="otpBack(event,this,'')"/>
+        <input class="otp-input" maxlength="1" id="otp-f-2" oninput="otpNext(this,'otp-f-3')" onkeydown="otpBack(event,this,'otp-f-1')"/>
+        <input class="otp-input" maxlength="1" id="otp-f-3" oninput="otpNext(this,'otp-f-4')" onkeydown="otpBack(event,this,'otp-f-2')"/>
+        <input class="otp-input" maxlength="1" id="otp-f-4" oninput="otpNext(this,'otp-f-5')" onkeydown="otpBack(event,this,'otp-f-3')"/>
+        <input class="otp-input" maxlength="1" id="otp-f-5" oninput="otpNext(this,'otp-f-6')" onkeydown="otpBack(event,this,'otp-f-4')"/>
+        <input class="otp-input" maxlength="1" id="otp-f-6" oninput="otpNext(this,'')" onkeydown="otpBack(event,this,'otp-f-5')"/>
+      </div>
+      <div class="otp-timer" id="otp-forgot-timer">⏱ ١٠ خولەک ماوەت هەیە</div>
+      <div class="otp-resend" onclick="doForgotStep1(true)">دووبارە ناردن</div>
+      <br/>
+      <button class="btn-primary" onclick="doForgotVerify()">✅ دڵنیاکردنەوە</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--             NEW PASSWORD PAGE              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-newpass">
+  <div style="display:flex;justify-content:flex-start;padding:12px 16px;background:white;border-bottom:1px solid var(--border)">
+    <button onclick="showPage('page-login')" style="background:#f0f0f6;border:none;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;cursor:pointer">→ گەرانەوە</button>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-icon">🔒</div>
+      <h2 class="auth-title">وشەی نهێنی نوێ</h2>
+      <p class="auth-sub">وشەی نهێنی نوێت دیاری بکە</p>
+      <div class="form-group">
+        <label class="form-label">🔒 وشەی نهێنی نوێ</label>
+        <input class="form-input" type="password" placeholder="وشەیەکی بەهێز بنووسە" id="new-pass" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">🔒 دووبارە بنووسە</label>
+        <input class="form-input" type="password" placeholder="دووبارە بنووسە" id="new-pass2" />
+      </div>
+      <button class="btn-primary" onclick="doChangePassword()">✅ گۆڕینی وشەی نهێنی</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--                DASHBOARD                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-nav">
+    <div class="dash-actions">
+      <button class="dash-icon-btn" onclick="showTab('tab-profile')">👤</button>
+      <button class="dash-icon-btn" onclick="logout()">🚪</button>
+      <button class="dash-icon-btn" style="background:var(--primary)" onclick="downloadLastFile()">⬇️</button>
+    </div>
+    <div class="user-info">
+      <div style="text-align:right">
+        <div class="user-name" id="dash-username">بەکارهێنەر</div>
+        <div class="user-badge">PREMIUM</div>
+      </div>
+      <div class="user-avatar" id="dash-avatar">?</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('tab-create')" id="tab-btn-create">✏️ دروستکردن</button>
+    <button class="tab" onclick="showTab('tab-scanner')" id="tab-btn-scanner">📄 شیکارکەر</button>
+    <button class="tab" onclick="showTab('tab-projects')" id="tab-btn-projects">☁️ پرۆژەکانم</button>
+    <button class="tab" onclick="showTab('tab-profile')" id="tab-btn-profile">👤 پرۆفایل</button>
+  </div>
+
+  <!-- ── CREATE TAB ── -->
+  <div id="tab-create" class="create-wrap">
+    <div id="create-form-section">
+      <div class="type-grid">
+        <button class="type-btn selected" id="type-seminar" onclick="selectType('seminar')">📊 سیمینار (PPTX)</button>
+        <button class="type-btn" id="type-report" onclick="selectType('report')">📄 ڕاپۆرت (Word)</button>
+      </div>
+      <label class="create-label">ناوی زانکۆ/پەیمانگا</label>
+      <input class="create-input" placeholder="تکایە ناوی زانکۆ/پەیمانگا بنووسە" id="inp-uni" />
+      <label class="create-label">ناوی قوتابی</label>
+      <input class="create-input" placeholder="ناوی خۆت لێرە بنووسە" id="inp-student" />
+      <label class="create-label">ناوی مامۆستا</label>
+      <input class="create-input" placeholder="ناوی مامۆستای سەرپەرشتیار" id="inp-teacher" />
+      <label class="create-label">لۆگۆی زانکۆ (ئارەزووکردنی)</label>
+      <div class="upload-zone" onclick="document.getElementById('logo-file').click()">
+        <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="handleLogoUpload(this)"/>
+        <div class="upload-icon" id="logo-preview-icon">🖼️</div>
+        <div class="upload-text" id="logo-upload-text">لۆگۆکە لێرە دابنێ یان کرتە بکە</div>
+        <div class="upload-sub">پشتیوانی PNG و JPG دەکات</div>
+      </div>
+      <label class="create-label">💡 بیرۆکەکەت چییە؟</label>
+      <input class="create-input" placeholder="بۆ نموونە: کاریگەری زیری دەستکرد..." id="inp-topic" />
+      <p style="font-size:13px;font-weight:700;color:var(--dark);text-align:right;margin-bottom:12px">هەڵبژاردنی دیزاینی سیمینار <span style="background:#ff9f43;color:white;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700">PRO FEATURE</span></p>
+      <div class="theme-grid">
+        <div class="theme-item selected" onclick="selectTheme(this)" data-theme="dark">
+          <div class="theme-preview" style="background:#1a1a2e"><div class="theme-line" style="width:60%;background:#6B5CE7"></div></div>
+          <div class="theme-name">مۆدێرن (تاریک)</div>
+        </div>
+        <div class="theme-item" onclick="selectTheme(this)" data-theme="blue">
+          <div class="theme-preview" style="background:#f0f4ff"><div class="theme-line" style="width:60%;background:#2563eb"></div></div>
+          <div class="theme-name">فەرمی (شین)</div>
+        </div>
+        <div class="theme-item" onclick="selectTheme(this)" data-theme="gold">
+          <div class="theme-preview" style="background:#1a1a1a"><div class="theme-line" style="width:60%;background:#f59e0b"></div></div>
+          <div class="theme-name">شاهانە (ئاڵتوونی)</div>
+        </div>
+        <div class="theme-item" onclick="selectTheme(this)" data-theme="pink">
+          <div class="theme-preview" style="background:#fdf2f8"><div class="theme-line" style="width:60%;background:#ec4899"></div></div>
+          <div class="theme-name">داهێنەرانە (مۆر)</div>
+        </div>
+      </div>
+      <label class="create-label">زانیاری و تێبینی زیاتر</label>
+      <textarea class="create-input" rows="3" placeholder="بۆ نموونە: با شێوازی نووسینەکە زۆر ئەکادیمی بێت..." style="resize:none" id="inp-notes"></textarea>
+      <button class="submit-btn" id="create-btn" onclick="doCreateStep1()">⚡ هەنگاوی یەکەم: دارشتنی پلان</button>
+    </div>
+
+    <!-- OUTLINE SECTION -->
+    <div id="outline-section" style="display:none">
+      <div class="outline-card">
+        <div class="outline-header">
+          <div class="outline-title">📋 پێداچوونەوەی پلان</div>
+          <div class="outline-badge" id="outline-type-badge">سیمینار</div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);text-align:right;margin-bottom:16px">دەتوانیت سەرەدێڕەکان بکەیت یان بەشی نوێیان بۆ زیاد بکەیت.</p>
+        <div id="outline-list"></div>
+        <button class="outline-add" onclick="addOutlineItem()">+ زیادکردنی بەش</button>
+        <button class="generate-btn" id="generate-btn" onclick="doGenerateContent()">✨ دروستکردنی ناوەرۆکی کۆتایی</button>
+      </div>
+    </div>
+
+    <!-- RESULT SECTION -->
+    <div id="result-section" style="display:none">
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-emoji">🎉</div>
+          <div class="result-title">پرۆژەکەت ئامادەیە!</div>
+          <div class="result-sub">سەیرێکی بکە و پاشان دایبەزێنە</div>
+        </div>
+        <button class="download-btn" id="download-btn" onclick="downloadFile()">⬇️ داگرتنی فایل</button>
+        <div id="slides-preview"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCANNER TAB ── -->
+  <div id="tab-scanner" class="scanner-wrap" style="display:none">
+    <div class="scanner-hero">
+      <div class="scanner-brain">🧠</div>
+      <h2 class="scanner-title">شیکارکەری فایلەکان</h2>
+      <p class="scanner-sub">فایلەکەی (PDF یان Word) لێرە دابنێ، زیری دەستکرد دەیخوێنێتەوە و گرنگترین پرسیار و وەڵامەکانت بۆ دەردەهێنێت.</p>
+      <div class="upload-zone" onclick="document.getElementById('scanner-file').click()">
+        <input type="file" id="scanner-file" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="handleScannerFile(this)"/>
+        <div style="font-size:36px;margin-bottom:12px">☁️</div>
+        <div class="upload-text" id="scanner-upload-text">فایلەکە لێرە دابنێ یان کرتە بکە</div>
+        <div class="upload-sub">پشتیوانی PDF و TXT و Word دەکات</div>
+      </div>
+    </div>
+    <div id="scanner-result-area" style="display:none">
+      <div class="scanner-result">
+        <h3>📄 ناوەرۆکی فایلەکە:</h3>
+        <div id="scanner-summary"></div>
+      </div>
+      <div class="scanner-chat">
+        <div id="chat-messages"></div>
+        <input class="scanner-chat-input" id="chat-input" placeholder="پرسیارێک بکە لەسەر فایلەکە..." onkeydown="if(event.key==='Enter') sendChatMessage()"/>
+        <button class="submit-btn" onclick="sendChatMessage()">📤 ناردن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROJECTS TAB ── -->
+  <div id="tab-projects" class="projects-wrap" style="display:none">
+    <h2 class="projects-title">پرۆژە پاشەکەوتکراوەکانم</h2>
+    <p class="projects-sub">هەموو ئەو کارانەی دروست کردوون</p>
+    <div id="projects-list">
+      <div class="project-card">
+        <div class="project-icon" style="background:#e8f5e9">📊</div>
+        <div class="project-info">
+          <div class="project-title-t">لەسەر پاک و خاوێنی ژینگە</div>
+          <div class="project-meta">
+            <span class="project-type">سیمینار</span>
+            <span>🕐 2026-04-27 16:08</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE TAB ── -->
+  <div id="tab-profile" class="profile-wrap" style="display:none">
+    <div class="profile-hero">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <h2 class="profile-name" id="profile-name">بەکارهێنەر</h2>
+      <div class="pro-badge"><span class="pro-dot"></span> PRO ACCOUNT</div>
+    </div>
+    <div class="settings-card">
+      <h3 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;text-align:right">⚙️ ریکخستنی هەژمار</h3>
+      <label class="settings-label">👤 ناوی تەواو</label>
+      <input class="settings-input" id="profile-name-input" placeholder="ناوت بنووسە" />
+      <label class="settings-label">📧 ئیمەیڵ</label>
+      <input class="settings-input" id="profile-email-input" placeholder="ئیمێلەکەت" readonly style="opacity:0.6"/>
+      <label class="settings-label">🔒 وشەی نهێنی <span class="badge-tag">ئارەزووکردنی</span></label>
+      <input class="settings-input" type="password" placeholder="بەتاڵی جێبهێڵە" id="profile-pass-input"/>
+      <button class="submit-btn" onclick="saveProfile()" style="margin-top:4px">پاشەکەوتکردن</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--                  SCRIPTS                   -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+// ─── STATE ───────────────────────────────────
+let currentUser = { name: '', email: '', avatar: '?', password: '' };
+let pendingReg  = { name: '', email: '', password: '' };
+let pendingForgot = { email: '' };
+let otpCode     = '';
+let otpExpiry   = 0;
+let otpTimerInterval = null;
+let selectedType  = 'seminar';
+let selectedTheme = 'dark';
+let logoBase64    = '';
+let outlineItems  = [];
+let generatedSlides = [];
+let lastFileBlob  = null;
+let lastFileName  = '';
+let scannerText   = '';
+let chatHistory   = [];
+
+const EMAILJS_SERVICE  = 'service_8oazcob';
+const EMAILJS_TEMPLATE = 'template_tg8bkal';
+
+// ─── UI HELPERS ──────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function showTab(id) {
+  ['tab-create','tab-scanner','tab-projects','tab-profile'].forEach(t => {
+    document.getElementById(t).style.display = 'none';
+    document.getElementById('tab-btn-' + t.replace('tab-','')).classList.remove('active');
+  });
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('tab-btn-' + id.replace('tab-','')).classList.add('active');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function showLoading(text = 'زیری دەستکرد خەریکی کارە...', sub = 'تکایە چەند جرکەیەک جاومەرێ بکە') {
+  document.getElementById('loading-text').textContent = text;
+  document.getElementById('loading-sub').textContent = sub;
+  document.getElementById('loading-overlay').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loading-overlay').classList.remove('show');
+}
+
+// ─── OTP HELPERS ─────────────────────────────
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+function startOTPTimer(timerElId) {
+  if (otpTimerInterval) clearInterval(otpTimerInterval);
+  otpExpiry = Date.now() + 10 * 60 * 1000;
+  otpTimerInterval = setInterval(() => {
+    const left = Math.max(0, Math.ceil((otpExpiry - Date.now()) / 1000));
+    const m = Math.floor(left / 60);
+    const s = left % 60;
+    const el = document.getElementById(timerElId);
+    if (el) el.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')} خولەک ماوەت هەیە`;
+    if (left === 0) clearInterval(otpTimerInterval);
+  }, 1000);
+}
+function otpNext(el, nextId) {
+  if (el.value && nextId) document.getElementById(nextId).focus();
+}
+function otpBack(e, el, prevId) {
+  if (e.key === 'Backspace' && !el.value && prevId) document.getElementById(prevId).focus();
+}
+function getOTPValue(prefix) {
+  return ['1','2','3','4','5','6'].map(i => document.getElementById(prefix + i).value).join('');
+}
+function clearOTP(prefix) {
+  ['1','2','3','4','5','6'].forEach(i => { document.getElementById(prefix + i).value = ''; });
+  document.getElementById(prefix + '1').focus();
+}
+
+// ─── REGISTER ────────────────────────────────
+async function doRegisterStep1(resend = false) {
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  if (!resend) {
+    if (!name || !email || !pass) { showToast('تکایە هەموو خانەکان پڕبکەوە'); return; }
+    pendingReg = { name, email, password: pass };
+  }
+  otpCode = generateOTP();
+  showLoading('ناردنی کۆد بۆ ئیمێلەکەت...', 'تکایە چەند چرکەیەک بوەستە');
+  try {
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+      to_email: pendingReg.email,
+      code: otpCode,
+      name: pendingReg.name
+    });
+    hideLoading();
+    document.getElementById('otp-reg-hint').textContent = `کۆد بۆ ${pendingReg.email} نێردرا`;
+    clearOTP('otp-r-');
+    startOTPTimer('otp-reg-timer');
+    showPage('page-register-otp');
+    showToast('کۆدەکە نێردرا! ئیمێلەکەت بپشکنە');
+  } catch(e) {
+    hideLoading();
+    showToast('هەڵە لە ناردنی ئیمێل. تکایە دووبارە هەوڵ بدەرەوە');
+  }
+}
+function doRegisterVerify() {
+  const entered = getOTPValue('otp-r-');
+  if (entered.length < 6) { showToast('تکایە کۆدی ٦ ژمارەیی بنووسە'); return; }
+  if (Date.now() > otpExpiry) { showToast('کۆدەکە کاتی تەواو بووە. دووبارە بنێرە'); return; }
+  if (entered !== otpCode) { showToast('کۆدەکە هەڵەیە. دووبارە هەوڵ بدەرەوە'); return; }
+  currentUser.name     = pendingReg.name;
+  currentUser.email    = pendingReg.email;
+  currentUser.password = pendingReg.password;
+  currentUser.avatar   = pendingReg.name.charAt(0).toUpperCase();
+  updateDashUser();
+  showPage('page-dashboard');
+  showToast('بەخێربێیتەوە ' + currentUser.name + '! هەژمارەکەت دروست بوو ✅');
+}
+
+// ─── LOGIN ───────────────────────────────────
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  if (!email) { showToast('تکایە ئیمێلەکەت بنووسە'); return; }
+  if (currentUser.email && email !== currentUser.email) { showToast('ئەم ئیمێلە ناسراو نییە'); return; }
+  if (currentUser.password && pass !== currentUser.password) { showToast('وشەی نهێنییەکە هەڵەیە'); return; }
+  if (!currentUser.name) {
+    currentUser.name   = email.split('@')[0];
+    currentUser.email  = email;
+    currentUser.avatar = currentUser.name.charAt(0).toUpperCase();
+  }
+  updateDashUser();
+  showPage('page-dashboard');
+  showToast('چوویتە ژوورەوە ✅');
+}
+
+// ─── FORGOT PASSWORD ─────────────────────────
+async function doForgotStep1(resend = false) {
+  const email = resend ? pendingForgot.email : document.getElementById('forgot-email').value.trim();
+  if (!email) { showToast('تکایە ئیمێلەکەت بنووسە'); return; }
+  pendingForgot.email = email;
+  otpCode = generateOTP();
+  showLoading('ناردنی کۆد بۆ ئیمێلەکەت...', 'تکایە چەند چرکەیەک بوەستە');
+  try {
+    await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+      to_email: email,
+      code: otpCode,
+      name: 'بەکارهێنەر'
+    });
+    hideLoading();
+    document.getElementById('otp-forgot-hint').textContent = `کۆد بۆ ${email} نێردرا`;
+    clearOTP('otp-f-');
+    startOTPTimer('otp-forgot-timer');
+    showPage('page-forgot-otp');
+    showToast('کۆدەکە نێردرا! ئیمێلەکەت بپشکنە');
+  } catch(e) {
+    hideLoading();
+    showToast('هەڵە لە ناردنی ئیمێل. تکایە دووبارە هەوڵ بدەرەوە');
+  }
+}
+function doForgotVerify() {
+  const entered = getOTPValue('otp-f-');
+  if (entered.length < 6) { showToast('تکایە کۆدی ٦ ژمارەیی بنووسە'); return; }
+  if (Date.now() > otpExpiry) { showToast('کۆدەکە کاتی تەواو بووە. دووبارە بنێرە'); return; }
+  if (entered !== otpCode) { showToast('کۆدەکە هەڵەیە. دووبارە هەوڵ بدەرەوە'); return; }
+  showPage('page-newpass');
+}
+function doChangePassword() {
+  const p1 = document.getElementById('new-pass').value;
+  const p2 = document.getElementById('new-pass2').value;
+  if (!p1 || p1.length < 6) { showToast('وشەی نهێنی کەمی ٦ پیت دەبێت'); return; }
+  if (p1 !== p2) { showToast('وشەکان یەکسان نین'); return; }
+  currentUser.password = p1;
+  showToast('وشەی نهێنی گۆڕدرا ✅');
+  showPage('page-login');
+}
+
+// ─── DASHBOARD HELPERS ───────────────────────
+function updateDashUser() {
+  document.getElementById('dash-username').textContent = currentUser.name;
+  document.getElementById('dash-avatar').textContent   = currentUser.avatar;
+  document.getElementById('profile-name').textContent  = currentUser.name;
+  document.getElementById('profile-avatar').textContent= currentUser.avatar;
+  document.getElementById('profile-name-input').value  = currentUser.name;
+  document.getElementById('profile-email-input').value = currentUser.email;
+}
+function logout() {
+  showPage('page-landing');
+  showToast('دەرچوویتە');
+}
+function saveProfile() {
+  const newName = document.getElementById('profile-name-input').value.trim();
+  const newPass = document.getElementById('profile-pass-input').value;
+  if (newName) {
+    currentUser.name   = newName;
+    currentUser.avatar = newName.charAt(0).toUpperCase();
+  }
+  if (newPass && newPass.length >= 6) currentUser.password = newPass;
+  updateDashUser();
+  showToast('پرۆفایلەکەت پاشەکەوت کرا ✅');
+}
+
+// ─── CREATE ──────────────────────────────────
+function selectType(type) {
+  selectedType = type;
+  document.getElementById('type-seminar').classList.toggle('selected', type === 'seminar');
+  document.getElementById('type-report').classList.toggle('selected', type === 'report');
+}
+function selectTheme(el) {
+  document.querySelectorAll('.theme-item').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTheme = el.dataset.theme || 'dark';
+}
+function handleLogoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    logoBase64 = e.target.result;
+    document.getElementById('logo-preview-icon').textContent = '✅';
+    document.getElementById('logo-upload-text').textContent = file.name;
+    showToast('لۆگۆکە بارکرا ✅');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function doCreateStep1() {
+  const topic   = document.getElementById('inp-topic').value.trim();
+  const student = document.getElementById('inp-student').value.trim();
+  const uni     = document.getElementById('inp-uni').value.trim();
+  const teacher = document.getElementById('inp-teacher').value.trim();
+  const notes   = document.getElementById('inp-notes').value.trim();
+  if (!topic) { showToast('تکایە بیرۆکەکەت بنووسە'); return; }
+
+  showLoading('زیری دەستکرد پلان دەدات...', 'چەند خولەک دەخایەنێت');
+  document.getElementById('create-btn').disabled = true;
+
+  try {
+    const typeLabel = selectedType === 'seminar' ? 'سیمینار' : 'راپۆرت';
+    const prompt = `بە زمانی کوردی سۆرانی، پلانێکی ${typeLabel} دروست بکە لەسەر بابەتی: "${topic}".
+${notes ? 'تێبینی: ' + notes : ''}
+تەنها ٦-٨ سەرەدێڕی سەرەکی بنووسە. هەر سەرەدێڕ لەسەر خەتێکی جیاواز.
+فۆرمات: تەنها لیستی سەرەدێڕەکان بدەرەوە، بەبێ نووسینی زیاتر.
+نموونە:
+پێشەکی
+مێژووی بابەتەکە
+...`;
+
+    const res = await callClaude(prompt, 800);
+    hideLoading();
+
+    const lines = res.split('\n').map(l => l.replace(/^[-•*\d.]+\s*/,'').trim()).filter(l => l.length > 2);
+    outlineItems = lines.slice(0, 8);
+
+    renderOutline(typeLabel);
+    document.getElementById('create-form-section').style.display = 'none';
+    document.getElementById('outline-section').style.display = 'block';
+    document.getElementById('result-section').style.display = 'none';
+    window.scrollTo(0, 0);
+  } catch(e) {
+    hideLoading();
+    document.getElementById('create-btn').disabled = false;
+    showToast('هەڵەیەک ڕوویدا. دووبارە هەوڵ بدەرەوە');
+  }
+}
+
+function renderOutline(typeLabel) {
+  document.getElementById('outline-type-badge').textContent = typeLabel;
+  const list = document.getElementById('outline-list');
+  list.innerHTML = '';
+  outlineItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'outline-item';
+    div.innerHTML = `
+      <button class="outline-del" onclick="removeOutlineItem(${i})">✕</button>
+      <input style="flex:1;background:none;border:none;font-family:var(--font);font-size:14px;font-weight:600;color:var(--dark);text-align:right;outline:none" value="${item}" onchange="outlineItems[${i}]=this.value" />
+    `;
+    list.appendChild(div);
+  });
+}
+function removeOutlineItem(i) {
+  outlineItems.splice(i, 1);
+  renderOutline(selectedType === 'seminar' ? 'سیمینار' : 'راپۆرت');
+}
+function addOutlineItem() {
+  outlineItems.push('بەشی نوێ');
+  renderOutline(selectedType === 'seminar' ? 'سیمینار' : 'راپۆرت');
+}
+
+async function doGenerateContent() {
+  const topic   = document.getElementById('inp-topic').value.trim();
+  const student = document.getElementById('inp-student').value.trim();
+  const uni     = document.getElementById('inp-uni').value.trim();
+  const teacher = document.getElementById('inp-teacher').value.trim();
+  const notes   = document.getElementById('inp-notes').value.trim();
+
+  showLoading('ناوەرۆکی تەواو دەنووسێت...', 'کەمێک مامەڵەی پێویستە ⚡');
+  document.getElementById('generate-btn').disabled = true;
+
+  try {
+    const typeLabel = selectedType === 'seminar' ? 'سیمینار' : 'راپۆرت';
+    const sections  = outlineItems.join('\n');
+
+    const prompt = `بە زمانی کوردی سۆرانی ئەکادیمی، ${typeLabel}ێکی تەواو بنووسە لەسەر: "${topic}".
+${notes ? 'تێبینی: ' + notes : ''}
+${uni ? 'زانکۆ: ' + uni : ''}
+${student ? 'قوتابی: ' + student : ''}
+${teacher ? 'مامۆستا: ' + teacher : ''}
+
+بەشەکان:
+${sections}
+
+بۆ هەر بەشێک، ناونیشانەکە بنووسە لەسەر خەتێکی جیاواز بەم فۆرماتەوە:
+### ناونیشان
+ناوەرۆک لێرەدا...
+
+پەرەگرافی زیاتر لەسەر هەر بەشێک بنووسە. زمانی ئەکادیمی و وردبوونەوەی زانستی بەکار بهێنە.`;
+
+    const res = await callClaude(prompt, 3000);
+    hideLoading();
+
+    generatedSlides = parseSlides(res, topic);
+    renderResultSlides();
+    document.getElementById('outline-section').style.display = 'none';
+    document.getElementById('result-section').style.display = 'block';
+
+    addToProjects(topic, selectedType === 'seminar' ? 'سیمینار' : 'راپۆرت');
+    window.scrollTo(0, 0);
+  } catch(e) {
+    hideLoading();
+    document.getElementById('generate-btn').disabled = false;
+    showToast('هەڵەیەک ڕوویدا. دووبارە هەوڵ بدەرەوە');
+  }
+}
+
+function parseSlides(text, topic) {
+  const slides = [{ title: topic, body: 'ناوەرۆکی سیمینار' }];
+  const parts = text.split(/###\s+/).filter(p => p.trim());
+  parts.forEach(part => {
+    const lines = part.trim().split('\n');
+    const title = lines[0].trim();
+    const body  = lines.slice(1).join('\n').trim();
+    if (title) slides.push({ title, body });
+  });
+  return slides;
+}
+
+function renderResultSlides() {
+  const container = document.getElementById('slides-preview');
+  container.innerHTML = '';
+  generatedSlides.forEach((slide, i) => {
+    const div = document.createElement('div');
+    div.className = 'slide-preview';
+    div.innerHTML = `
+      <div class="slide-num">سلایدی ${i + 1}</div>
+      <div class="slide-title">${slide.title}</div>
+      <div class="slide-body">${slide.body.replace(/\n/g,'<br/>')}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function downloadFile() {
+  const topic = document.getElementById('inp-topic').value.trim() || 'پرۆژە';
+  if (selectedType === 'seminar') {
+    generatePPTX(topic);
+  } else {
+    generateDocx(topic);
+  }
+}
+function downloadLastFile() {
+  if (lastFileBlob) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(lastFileBlob);
+    a.download = lastFileName;
+    a.click();
+  } else {
+    showToast('هیچ فایلێک ئامادە نییە');
+  }
+}
+
+// ─── PPTX GENERATOR (بەبێ لایبرەری) ──────────
+function generatePPTX(topic) {
+  const student = document.getElementById('inp-student').value || '';
+  const uni     = document.getElementById('inp-uni').value || '';
+  const teacher = document.getElementById('inp-teacher').value || '';
+
+  // بە XML دروستکردنی PPTX
+  const themes = {
+    dark:  { bg: '1a1a2e', title: 'FFFFFF', body: 'CCCCCC', accent: '6B5CE7' },
+    blue:  { bg: 'EFF4FF', title: '1E3A8A', body: '374151', accent: '2563EB' },
+    gold:  { bg: '1a1a1a', title: 'FFFFFF', body: 'DDDDDD', accent: 'F59E0B' },
+    pink:  { bg: 'FDF2F8', title: '831843', body: '4B5563', accent: 'EC4899' },
+  };
+  const t = themes[selectedTheme] || themes.dark;
+
+  let slidesXML = '';
+  generatedSlides.forEach((slide, idx) => {
+    const bodyText = slide.body.replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
+    const titleText = slide.title.replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]));
+    slidesXML += `
+    <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+           xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+           xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+      <p:cSld>
+        <p:bg><p:bgPr><a:solidFill><a:srgbClr val="${t.bg}"/></a:solidFill><a:effectLst/></p:bgPr></p:bg>
+        <p:spTree>
+          <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+          <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+          <p:sp>
+            <p:nvSpPr><p:cNvPr id="2" name="Title"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>
+            <p:spPr><a:xfrm><a:off x="457200" y="274638"/><a:ext cx="8229600" cy="1143000"/></a:xfrm></p:spPr>
+            <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="ku" b="1" dirty="0"/><a:t>${titleText}</a:t></a:r></a:p></p:txBody>
+          </p:sp>
+          <p:sp>
+            <p:nvSpPr><p:cNvPr id="3" name="Body"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph idx="1"/></p:nvPr></p:nvSpPr>
+            <p:spPr><a:xfrm><a:off x="457200" y="1600200"/><a:ext cx="8229600" cy="4525963"/></a:xfrm></p:spPr>
+            <p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="ku" dirty="0"/><a:t>${bodyText}</a:t></a:r></a:p></p:txBody>
+          </p:sp>
+        </p:spTree>
+      </p:cSld>
+    </p:sld>`;
+  });
+
+  // ساده‌ترین ڕووی: HTML فایل دروست بکە بۆ داگرتن
+  generateHTMLPresentation(topic, t, student, uni, teacher);
+}
+
+function generateHTMLPresentation(topic, t, student, uni, teacher) {
+  const slideCount = generatedSlides.length;
+  let slidesHTML = '';
+  generatedSlides.forEach((slide, i) => {
+    slidesHTML += `
+    <div class="slide" id="slide-${i}" style="${i === 0 ? '' : 'display:none'}">
+      <div class="slide-number">${i + 1} / ${slideCount}</div>
+      <h2 class="slide-title">${slide.title}</h2>
+      <div class="slide-body">${slide.body.replace(/\n/g,'<br/>')}</div>
+      ${i === 0 ? `<div class="slide-meta">${uni ? uni + ' | ' : ''}${student ? student : ''}${teacher ? ' | ' + teacher : ''}</div>` : ''}
+    </div>`;
+  });
+
+  const html = `<!DOCTYPE html>
+<html dir="rtl" lang="ku">
+<head><meta charset="UTF-8"><title>${topic}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap');
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Noto Kufi Arabic',sans-serif; background:#111; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .pres { width:900px; max-width:100vw; }
+  .slide { background:#${t.bg}; color:#${t.body}; border-radius:16px; padding:60px 70px; min-height:500px; display:flex; flex-direction:column; justify-content:center; position:relative; }
+  .slide-number { position:absolute; top:20px; left:30px; font-size:13px; opacity:0.5; color:#${t.body}; }
+  .slide-title { color:#${t.title}; font-size:32px; font-weight:700; margin-bottom:30px; border-bottom:3px solid #${t.accent}; padding-bottom:16px; }
+  .slide-body { font-size:16px; line-height:2; color:#${t.body}; }
+  .slide-meta { position:absolute; bottom:20px; right:30px; font-size:12px; opacity:0.5; }
+  .controls { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+  .ctrl-btn { background:#${t.accent}; color:white; border:none; border-radius:10px; padding:12px 28px; font-size:15px; cursor:pointer; font-family:'Noto Kufi Arabic',sans-serif; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="pres">
+  ${slidesHTML}
+  <div class="controls">
+    <button class="ctrl-btn" onclick="prevSlide()">→ پێشوو</button>
+    <span id="cur" style="color:white;display:flex;align-items:center;font-family:'Noto Kufi Arabic',sans-serif">1 / ${slideCount}</span>
+    <button class="ctrl-btn" onclick="nextSlide()">دواتر ←</button>
+  </div>
+</div>
+<script>
+  let cur = 0;
+  const total = ${slideCount};
+  function show(n) {
+    document.getElementById('slide-' + cur).style.display = 'none';
+    cur = (n + total) % total;
+    document.getElementById('slide-' + cur).style.display = 'flex';
+    document.getElementById('cur').textContent = (cur+1) + ' / ' + total;
+  }
+  function nextSlide() { show(cur + 1); }
+  function prevSlide() { show(cur - 1); }
+<\/script>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  lastFileBlob = blob;
+  lastFileName = topic + '.html';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = lastFileName;
+  a.click();
+  showToast('فایلی سیمینار داگیرا ✅');
+}
+
+function generateDocx(topic) {
+  const student = document.getElementById('inp-student').value || '';
+  const uni     = document.getElementById('inp-uni').value || '';
+  const teacher = document.getElementById('inp-teacher').value || '';
+
+  let content = `<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap');
+  body { font-family:'Noto Kufi Arabic',sans-serif; direction:rtl; padding:60px; max-width:800px; margin:auto; color:#222; }
+  h1 { font-size:28px; text-align:center; margin-bottom:8px; }
+  .meta { text-align:center; color:#666; font-size:14px; margin-bottom:40px; }
+  h2 { font-size:20px; color:#1a1a2e; border-bottom:2px solid #6B5CE7; padding-bottom:8px; margin-top:30px; margin-bottom:14px; }
+  p { font-size:15px; line-height:2; margin-bottom:14px; }
+</style></head><body>
+<h1>${topic}</h1>
+<div class="meta">${uni}${student ? ' | ' + student : ''}${teacher ? ' | ' + teacher : ''}</div>`;
+
+  generatedSlides.slice(1).forEach(slide => {
+    content += `<h2>${slide.title}</h2><p>${slide.body.replace(/\n/g,'</p><p>')}</p>`;
+  });
+  content += '</body></html>';
+
+  const blob = new Blob([content], { type: 'application/msword' });
+  lastFileBlob = blob;
+  lastFileName = topic + '.doc';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = lastFileName;
+  a.click();
+  showToast('فایلی راپۆرت داگیرا ✅');
+}
+
+// ─── PROJECTS ────────────────────────────────
+function addToProjects(title, type) {
+  const list = document.getElementById('projects-list');
+  const now  = new Date().toISOString().slice(0,19).replace('T',' ');
+  const card = document.createElement('div');
+  card.className = 'project-card';
+  const icon = type === 'سیمینار' ? '📊' : '📄';
+  const bg   = type === 'سیمینار' ? '#e8f5e9' : '#e8f0ff';
+  card.innerHTML = `
+    <div class="project-icon" style="background:${bg}">${icon}</div>
+    <div class="project-info">
+      <div class="project-title-t">${title}</div>
+      <div class="project-meta">
+        <span class="project-type">${type}</span>
+        <span>🕐 ${now}</span>
+      </div>
+    </div>`;
+  list.insertBefore(card, list.firstChild);
+}
+
+// ─── SCANNER ─────────────────────────────────
+function handleScannerFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('scanner-upload-text').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = async e => {
+    scannerText = e.target.result.slice(0, 8000);
+    chatHistory = [];
+    showLoading('فایلەکە خوێندرایەوە...', 'زیری دەستکرد دەیشیکێنێت');
+    try {
+      const summary = await callClaude(`بە کوردی سۆرانی، کورتەیەکی ئەم دۆکیومێنتەی خوارەوە بنووسە:\n\n${scannerText}`, 600);
+      hideLoading();
+      document.getElementById('scanner-summary').innerHTML = summary.replace(/\n/g,'<br/>');
+      document.getElementById('scanner-result-area').style.display = 'block';
+      showToast('فایلەکە شیکرایەوە ✅');
+    } catch(e) {
+      hideLoading();
+      showToast('هەڵەیەک ڕوویدا');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  addChatMsg(q, 'user');
+  chatHistory.push({ role: 'user', content: q });
+
+  showLoading('وەڵام دەدات...', '');
+  try {
+    const contextMsg = chatHistory.length === 1
+      ? `ناوەرۆکی دۆکیومێنت:\n${scannerText}\n\nپرسیار: ${q}`
+      : q;
+    const ans = await callClaudeWithHistory(scannerText, chatHistory);
+    hideLoading();
+    addChatMsg(ans, 'ai');
+    chatHistory.push({ role: 'assistant', content: ans });
+  } catch(e) {
+    hideLoading();
+    addChatMsg('هەڵەیەک ڕوویدا. دووبارە هەوڵ بدەرەوە', 'ai');
+  }
+}
+function addChatMsg(text, role) {
+  const msgs = document.getElementById('chat-messages');
+  const div  = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ─── CLAUDE API ──────────────────────────────
+async function callClaude(prompt, maxTokens = 1000) {
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  if (!data.content) throw new Error('API error');
+  return data.content.map(b => b.text || '').join('');
+}
+
+async function callClaudeWithHistory(docText, history) {
+  const messages = [
+    { role: 'user', content: `ئەم دۆکیومێنتە بخوێنەرەوە:\n${docText}\n\nئێستا پرسیارەکانم وەڵام بدەرەوە بە کوردی سۆرانی.` },
+    { role: 'assistant', content: 'باشە، دۆکیومێنتەکە خوێندمەوە. پرسیارەکانت بکە.' },
+    ...history
+  ];
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      max_tokens: 1000,
+      messages
+    })
+  });
+  const data = await res.json();
+  if (!data.content) throw new Error('API error');
+  return data.content.map(b => b.text || '').join('');
+}
+
+// ─── BACK TO CREATE FORM ─────────────────────
+function backToCreateForm() {
+  document.getElementById('create-form-section').style.display = 'block';
+  document.getElementById('outline-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('create-btn').disabled = false;
+  document.getElementById('generate-btn').disabled = false;
+}
+</script>
+
+<div style="text-align:center;padding:20px;font-size:12px;color:#aaa;background:white;border-top:1px solid #eee">
+  <strong>Amada AI © 2026</strong><br/>دروستکراوە لەلایەن ئیبراهیم قادر
+</div>
+
+</body>
+</html>`;
