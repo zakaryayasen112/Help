@@ -9,25 +9,29 @@ export default async function handler(req, res) {
   try {
     const { messages, max_tokens = 1000 } = req.body;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://helpaii.vercel.app',
-        'X-Title': 'Amada AI'
-      },
-      body: JSON.stringify({
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
-        max_tokens,
-        messages
-      })
-    });
+    const lastMessage = messages[messages.length - 1].content;
+
+    const response = await fetch(
+      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.HF_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'mistralai/Mistral-7B-Instruct-v0.3',
+          messages,
+          max_tokens,
+          stream: false
+        })
+      }
+    );
 
     const data = await response.json();
 
     if (data.error) {
-      return res.status(500).json({ error: data.error.message });
+      return res.status(500).json({ error: data.error });
     }
 
     const text = data.choices?.[0]?.message?.content || '';
